@@ -1,0 +1,47 @@
+--Data Analysis on Movie Awards Database
+
+SELECT title, production year 
+FROM movie
+WHERE title LIKE '%Alien%';
+
+
+SELECT id, first_name, last_name
+FROM person
+ORDER BY year_born
+LIMIT 1;
+
+
+SELECT id, first_name, last_name, (year_of_award - year_born) AS age_during_award
+FROM person NATURAL JOIN writer_award
+WHERE lower(award_name) = 'oscar'
+AND result = 'won'
+AND year_of_award - year_born >= 50;
+
+
+SELECT ROUND (100.0 * (SELECT COUNT (DISTINCT id) FROM director) / (SELECT COUNT(*) FROM person),2) AS director_perecentage;
+
+
+SELECT scene_no, description
+FROM appearance
+WHERE title = 'The Birds'
+AND scene_no < 6;
+
+
+WITH M2D AS (SELCET title, production_year, id
+FROM movie_award NATURAL JOIN director
+WHERE award_name = 'NYFCC Award'
+AND result = 'won')
+SELECT m1.title, m1.production_year, p.first_name, p.last_name
+FROM M2D m1 LEFT JOIN person p
+ON m1.id = p.id;
+
+
+SELECT title, production_year, year_of_award, COUNT(year_of_award)
+FROM actor_award
+WHERE result = 'won'
+GROUP BY year_of_award, title, production_year
+HAVING COUNT (year_of_award) >= 2;
+
+
+
+
